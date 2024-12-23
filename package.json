@@ -3,9 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "dev": "nodemon --env-file=.env.development src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Aishik Sikdar",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.1.0",
+    "express": "^4.21.2",
+    "firebase-admin": "^13.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "prisma": "^6.1.0"
+  }
 }
