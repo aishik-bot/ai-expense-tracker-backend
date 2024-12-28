@@ -1,4 +1,4 @@
-import { auth } from "../firebase.mjs";
+import { auth } from "../utils/firebase.mjs";
 import AppError from "../utils/appError.mjs";
 import asyncHandler from "./asyncHandler.mjs";
 
@@ -17,6 +17,7 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
     // Check for token in headers (Authorization header as Bearer token)
     const token =
         req.headers.authorization && req.headers.authorization.split(" ")[1];
+
     if (!token) {
         return next(
             new AppError("Unauthorized access, No token provided", 401)
@@ -31,5 +32,3 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
 
     next();
 });
-
-

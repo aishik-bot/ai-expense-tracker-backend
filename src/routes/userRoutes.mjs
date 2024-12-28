@@ -1,9 +1,17 @@
 import express from "express";
 import { createUserValidator } from "../validators/userValidators.mjs";
-import { registerUser } from "../controllers/userController.mjs";
+import {
+    getUserDetails,
+    registerUser,
+} from "../controllers/userController.mjs";
+import { verifyToken } from "../middleware/authMiddleware.mjs";
 
 const router = express.Router();
 
-router.route("/").post( registerUser);
+// route to register a new user
+router.route("/").post(registerUser);
+
+// route to get the details of the currently logged in user
+router.route("/me").get(verifyToken, getUserDetails);
 
 export default router;
