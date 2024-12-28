@@ -1,3 +1,4 @@
+import './utils/logger.mjs';
 import express from "express";
 import errorHandler from "./middleware/errorHandler.mjs";
 
@@ -12,9 +13,11 @@ app.get('/', (req, res) => {
   res.send('Hello World from Expense Tracker!');
 });
 
-app.use(errorHandler)
+// Attach the global error handler middleware to catch any
+// unhandled errors and send error responses to the client
+app.use(errorHandler);
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  logger.log(`Server is running on http://localhost:${port}`);
 });
