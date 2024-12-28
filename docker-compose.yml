@@ -1,19 +1,30 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:latest
-    container_name: postgres
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      TZ: ${TZ}
+  app:
+    build: .
+    container_name: app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - .:/app
     ports:
-      - "5432:5432"
+      - "8000:8000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
 
-volumes:
-  postgres_data:
-    driver: local
+#   postgres:
+#     image: postgres:latest
+#     container_name: postgres
+#     environment:
+#       POSTGRES_USER: ${POSTGRES_USER}
+#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#       POSTGRES_DB: ${POSTGRES_DB}
+#       TZ: ${TZ}
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     ports:
+#       - "5432:5432"
+
+# volumes:
+#   postgres_data:
+#     driver: local
