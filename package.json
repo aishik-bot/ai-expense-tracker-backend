@@ -6,16 +6,25 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --env-file=.env.development src/index.js",
+    "prisma:push": "dotenv -e .env.development -- prisma db push",
+    "prisma:generate": "dotenv -e .env.development -- prisma generate",
+    "prisma:studio": "dotenv -e .env.development -- prisma studio",
+    "prisma:migrate": "dotenv -e .env.development -- prisma migrate dev",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
   },
   "author": "Aishik Sikdar",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.1.0",
     "express": "^4.21.2",
+    "express-validator": "^7.2.0",
     "firebase-admin": "^13.0.2"
   },
   "devDependencies": {
+    "dotenv-cli": "^8.0.0",
     "nodemon": "^3.1.9",
     "prisma": "^6.1.0"
   }
