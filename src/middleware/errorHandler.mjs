@@ -1,3 +1,5 @@
+import { Prisma } from "@prisma/client";
+
 /**
  * Error handling middleware for Express.js.
  * Catches errors, logs stack traces in development, and sends formatted error responses.
@@ -20,19 +22,34 @@ const errorHandler = (err, req, res, next) => {
      * Defaults to 'Something went wrong!' if not specified by the error.
      * @type {string}
      */
-    let message = err.message || 'Something went wrong!';
-  
-    // Log the error stack trace only if in development environment
-    console.error(err.stack);
-  
+    let message = err.message || "Something went wrong!";
+
+    // log the error stack trace in development environment
+    if (process.env.NODE_ENV !== "production") {
+        console.error(err.stack);
+    }
+
+    // Handle specific Prisma error types so that database errors are not exposed to the client
+    if (
+        err instanceof Prisma.PrismaClientKnownRequestError ||
+        err instanceof Prisma.PrismaClientUnknownRequestError ||
+        err instanceof Prisma.PrismaClientValidationError
+    ) {
+        logger.error(`Prisma error: ${err.message}`);
+        // Prisma Client error
+        message = "An internal server error occurred. Please try again later.";
+    } else {
+        logger.error(`Unknown error: ${err.message}`);
+    }
+
     // Respond with the error details in JSON format
     res.status(statusCode).json({
-      success: false,
-      message,
-      // Hide stack trace in production environment, show in development
-      stack: process.env.NODE_ENV === 'production' ? null : err.stack
+        success: false,
+        message,
+        // Hide stack trace in production environment, show in development
+        stack: process.env.NODE_ENV === "production" ? null : err.stack,
     });
 };
-  
+
 // Exporting the errorHandler for use in other modules
 export default errorHandler;
