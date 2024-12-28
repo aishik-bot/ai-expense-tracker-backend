@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node src/index.js",
     "dev": "nodemon --env-file=.env.development src/index.js",
     "prisma:push": "dotenv -e .env.development -- prisma db push",
     "prisma:generate": "dotenv -e .env.development -- prisma generate",
