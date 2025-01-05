@@ -6,11 +6,11 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon --env-file=.env.development src/index.js",
-    "prisma:push": "dotenv -e .env.development -- prisma db push",
-    "prisma:generate": "dotenv -e .env.development -- prisma generate",
-    "prisma:studio": "dotenv -e .env.development -- prisma studio",
-    "prisma:migrate": "dotenv -e .env.development -- prisma migrate dev",
+    "dev": "nodemon --env-file=.env src/index.js",
+    "prisma:push": "dotenv -e .env -- prisma db push",
+    "prisma:generate": "dotenv -e .env -- prisma generate",
+    "prisma:studio": "dotenv -e .env -- prisma studio",
+    "prisma:migrate": "dotenv -e .env -- prisma migrate dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "prisma": {

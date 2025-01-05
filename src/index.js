@@ -25,6 +25,7 @@ app.all("*", (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
+
 // Start the server
 app.listen(port, () => {
     logger.log(`Server is running on http://localhost:${port}`);

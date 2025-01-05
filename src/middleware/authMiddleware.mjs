@@ -15,8 +15,7 @@ import asyncHandler from "./asyncHandler.mjs";
  */
 export const verifyToken = asyncHandler(async (req, res, next) => {
     // Check for token in headers (Authorization header as Bearer token)
-    const token =
-        req.headers.authorization && req.headers.authorization.split(" ")[1];
+    const token = req.headers.authorization;
 
     if (!token) {
         return next(
