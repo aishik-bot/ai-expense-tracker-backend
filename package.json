@@ -20,13 +20,13 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.1.0",
+    "prisma": "^6.1.0",
     "express": "^4.21.2",
     "express-validator": "^7.2.0",
     "firebase-admin": "^13.0.2"
   },
   "devDependencies": {
     "dotenv-cli": "^8.0.0",
-    "nodemon": "^3.1.9",
-    "prisma": "^6.1.0"
+    "nodemon": "^3.1.9"
   }
 }

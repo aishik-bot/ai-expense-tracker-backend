@@ -5,7 +5,7 @@ import AppError from "./utils/appError.mjs";
 import userRoutes from "./routes/userRoutes.mjs";
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 8000;
 
 // Middleware to parse incoming requests with JSON payload
 app.use(express.json());
