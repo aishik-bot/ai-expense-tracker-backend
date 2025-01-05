@@ -1,10 +1,14 @@
 import "./utils/logger.mjs";
 import express from "express";
+import cors from 'cors';
 import errorHandler from "./middleware/errorHandler.mjs";
 import AppError from "./utils/appError.mjs";
 import userRoutes from "./routes/userRoutes.mjs";
 
 const app = express();
+
+app.use(cors())
+
 const port = process.env.PORT || 8000;
 
 // Middleware to parse incoming requests with JSON payload
