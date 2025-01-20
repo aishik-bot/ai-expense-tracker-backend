@@ -1,4 +1,4 @@
-import { createUser, getUser } from "../services/userService.mjs";
+import { createUser, getAllUsers, getUser } from "../services/userService.mjs";
 import prisma from "../prisma/client.mjs";
 import asyncHandler from "../middleware/asyncHandler.mjs";
 import sendResponse from "../utils/sendResponse.mjs";
@@ -37,7 +37,6 @@ export const registerUser = asyncHandler(async (req, res) => {
     });
 });
 
-
 /**
  * Controller function to get the details of the currently logged in user.
  * @param {Object} req - Express request object.
@@ -62,5 +61,17 @@ export const getUserDetails = asyncHandler(async (req, res, next) => {
         statusCode: 200,
         message: "User details retrieved successfully",
         data: user,
+    });
+});
+
+export const getAllUsersByAdmin = asyncHandler(async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
+    const users = await getAllUsers(Number(page), Number(limit));
+
+    sendResponse({
+        res,
+        statusCode: 200,
+        message: "Users retrieved successfully",
+        data: users,
     });
 });

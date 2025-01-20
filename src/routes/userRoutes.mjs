@@ -5,11 +5,12 @@ import {
     registerUser,
 } from "../controllers/userController.mjs";
 import { verifyToken } from "../middleware/authMiddleware.mjs";
+import { requireRole } from "../middleware/requireRole.mjs";
 
 const router = express.Router();
 
 // route to register a new user
-router.route("/").post(registerUser);
+router.route("/").post(createUserValidator, registerUser);
 
 // route to get the details of the currently logged in user
 router.route("/me").get(verifyToken, getUserDetails);

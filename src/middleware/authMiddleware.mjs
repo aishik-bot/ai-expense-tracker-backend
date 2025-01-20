@@ -1,6 +1,7 @@
 import { auth } from "../utils/firebase.mjs";
 import AppError from "../utils/appError.mjs";
 import asyncHandler from "./asyncHandler.mjs";
+import prisma from "../prisma/client.mjs";
 
 /**
  * Middleware function to verify the Firebase authentication token from the request.
@@ -26,8 +27,27 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
     // Verify the token using Firebase Admin
     const decodedToken = await auth.verifyIdToken(token);
 
+    // Check if the user exists in the database
+    const user = await prisma.user.findUnique({
+        where: {
+            firebaseId: decodedToken.uid,
+        },
+        select: {
+            role: {
+                select: {
+                    name: true,
+                },
+            },
+        },
+    });
+
+    // If user is not found, throw an error
+    if (!user) {
+        return next(new AppError("Unauthorized access, User not found", 401));
+    }
+
     // Attach the user to the request object
-    req.user = decodedToken;
+    req.user = { ...decodedToken, role: user.role.name };
 
     next();
 });

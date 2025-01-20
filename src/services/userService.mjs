@@ -69,3 +69,39 @@ export const getUser = asyncHandler(async ({ firebaseId }) => {
     // Return the user
     return user;
 });
+
+/**
+ * Fetches all users from the database.
+ * @param {number} page - The page number to fetch (default is 1).
+ * @param {number} limit - The number of users to fetch per page (default is 10).
+ * @returns {Promise<Object>} A promise that resolves to an object containing users, total users, current page, and total pages.
+ */
+export const getAllUsers = asyncHandler(async (page = 1, limit = 10) => {
+    const skip = (page - 1) * limit;
+    // Fetch all users from the database
+    const users = await prisma.user.findMany({
+        skip,
+        take: limit,
+        select: {
+            id: true,
+            firstname: true,
+            lastname: true,
+            email: true,
+            role: {
+                select: {
+                    name: true,
+                },
+            },
+        },
+    });
+
+    const totalUsers = await prisma.user.count();
+
+    // Return the users
+    return {
+        users,
+        totalUsers,
+        currentPage: page,
+        totalPages: Math.ceil(totalUsers / limit),
+    };
+});
