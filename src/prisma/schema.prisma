@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   firstname  String
   lastname   String
-  email      String   @unique
-  firebaseId String   @unique
+  email      String    @unique
+  firebaseId String    @unique
   roleId     String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  role       Role     @relation("roleInUser", fields: [roleId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  role       Role      @relation("roleInUser", fields: [roleId], references: [id])
+  Expense    Expense[] @relation(name: "userInExpense")
 
   @@map("users")
 }
@@ -29,4 +30,28 @@ model Role {
   User      User[]   @relation("roleInUser")
 
   @@map("roles")
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expenses  Expense[] @relation(name: "categoryInExpense")
+
+  @@map("categories")
+}
+
+model Expense {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(name: "userInExpense", fields: [userId], references: [id])
+  categoryId  String
+  category    Category @relation(name: "categoryInExpense", fields: [categoryId], references: [id])
+  amount      Float
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("expenses")
 }
