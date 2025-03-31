@@ -51,3 +51,34 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
 
     next();
 });
+
+
+export const verifySocketToken = asyncHandler(async (socket, next) => {
+    const token = socket.handshake.headers.authorization;          // Get token from socket handshake
+
+    // If no token is provided, throw an error
+    if (!token) {
+        return next(new AppError("Unauthorized access, No token provided", 401));
+    }
+
+    const decodedToken = await auth.verifyIdToken(token);
+
+    // Check if the user exists in the database
+    const user = await prisma.user.findUnique({
+        where: {
+            firebaseId: decodedToken.uid,
+        },
+        select: {
+            id: true,
+            role: {
+                select: {
+                    name: true,
+                },
+            },
+        },
+    });
+
+    socket.user = { ...decodedToken, role: user.role.name, id: user.id };
+
+    next();
+})

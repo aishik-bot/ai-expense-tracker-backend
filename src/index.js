@@ -1,12 +1,17 @@
 import "./utils/logger.mjs";
+import http from "http";
 import express from "express";
 import cors from "cors";
 import errorHandler from "./middleware/errorHandler.mjs";
 import AppError from "./utils/appError.mjs";
 import userRoutes from "./routes/userRoutes.mjs";
 import adminUserRoutes from "./routes/admin/userRoutes.mjs";
+import { setupSocket } from "./socket/socketConfig.mjs";
 
 const app = express();
+const server = http.createServer(app);
+
+setupSocket(server);
 
 app.use(cors());
 
@@ -23,15 +28,15 @@ app.get("/", (req, res) => {
     res.send("Hello World from Expense Tracker!");
 });
 
-// Attach the global error handler middleware to catch any
-// unhandled errors and send error responses to the client
-app.use(errorHandler);
-
 app.all("*", (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
+// Attach the global error handler middleware to catch any
+// unhandled errors and send error responses to the client
+app.use(errorHandler);
+
 // Start the server
-app.listen(port, () => {
+server.listen(port, () => {
     logger.log(`Server is running on http://localhost:${port}`);
 });
