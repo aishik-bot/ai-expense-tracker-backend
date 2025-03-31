@@ -5,7 +5,6 @@ import {
     registerUser,
 } from "../controllers/userController.mjs";
 import { verifyToken } from "../middleware/authMiddleware.mjs";
-import { requireRole } from "../middleware/requireRole.mjs";
 
 const router = express.Router();
 
