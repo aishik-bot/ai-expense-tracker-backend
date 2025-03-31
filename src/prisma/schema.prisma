@@ -17,7 +17,8 @@ model User {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   role       Role      @relation("roleInUser", fields: [roleId], references: [id])
-  Expense    Expense[] @relation(name: "userInExpense")
+  expenses   Expense[] @relation(name: "userInExpense")
+  messages   Message[]
 
   @@map("users")
 }
@@ -27,7 +28,7 @@ model Role {
   name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  User      User[]   @relation("roleInUser")
+  user      User[]   @relation("roleInUser")
 
   @@map("roles")
 }
@@ -54,4 +55,15 @@ model Expense {
   updatedAt   DateTime @updatedAt
 
   @@map("expenses")
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("messages")
 }
