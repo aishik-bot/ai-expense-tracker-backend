@@ -13,11 +13,17 @@ export const setupSocket = (httpServer) => {
 
     io.on("connection", (socket) => {
         console.log("New connection: ", socket.id);
+        try {
+            chatController(io, socket);
+        } catch (error) {
+            console.error("Error in chatController: ", error);
+            socket.emit("error", {
+                message: "Internal server error in chat controller.",
+            });
+        }
 
-        chatController(io, socket);
-
-        socket.on("disconnect", () => {
-            console.log("User disconnected: ", socket.id);
+        socket.on("disconnect", (reason) => {
+            console.log(`User ${socket.id} disconnected. Reason:`, reason);
         });
     });
 

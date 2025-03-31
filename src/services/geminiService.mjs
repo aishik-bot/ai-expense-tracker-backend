@@ -69,52 +69,131 @@ const generationConfig = {
  */
 const buildGeminiPrompt = (message) => {
     return {
-        prompt: `
-            Interpret the following user input as an expense entry. The user might be using Hinglish (a mix of Hindi and English) or Banglish (a mix of Bengali and English). Here's the task:
+        // prompt: `
+        //     Interpret the following user input as an expense entry. The user might be using Hinglish (a mix of Hindi and English) or Banglish (a mix of Bengali and English). Here's the task:
 
-            1. Identify the amount (e.g., "200", "₹500", "150 dollars").
-            2. Identify the currency (assume INR if not explicitly mentioned).
-            3. Categorize the expense into one of the predefined categories: 
-                [Housing, Utilities, Food & Beverages, Transportation, Shopping, Health, Entertainment, Education, Travel, Miscellaneous].
-            4. If multiple categories fit, prioritize the most specific one.
-            5. Extract a short description of the expense.
+        //     1. Identify the amount (e.g., "200", "₹500", "150 dollars").
+        //     2. Identify the currency (assume INR if not explicitly mentioned).
+        //     3. Categorize the expense into one of the predefined categories:
+        //         [Housing, Utilities, Food & Beverages, Transportation, Shopping, Health, Entertainment, Education, Travel, Miscellaneous].
+        //     4. If multiple categories fit, prioritize the most specific one.
+        //     5. Extract a short description of the expense.
 
-            Consider nuances like:
-            - Hinglish or Banglish phrases such as "500 kharcha kiya khana pe" or "200 diye cinema jete."
-            - Variants for "rupees" (e.g., "₹", "rs", "rupaiya", "টাকা").
-            - Common terms for daily activities like eating out, shopping, commuting, or paying bills.
+        //     Consider nuances like:
+        //     - Hinglish or Banglish phrases such as "500 kharcha kiya khana pe" or "200 diye cinema jete."
+        //     - Variants for "rupees" (e.g., "₹", "rs", "rupaiya", "টাকা").
+        //     - Common terms for daily activities like eating out, shopping, commuting, or paying bills.
 
-            Respond with a structured JSON:
-            {
-                "amount": <numeric_value>,
-                "category": <category_name>,
-                "description": <short_description>
-            }
+        //     Respond with a structured JSON:
+        //     {
+        //         "amount": <numeric_value>,
+        //         "category": <category_name>,
+        //         "description": <short_description>
+        //     }
 
-            Example input: "500 ka kharcha kiya khane pe"
-            Example response:
-            {
-                "amount": 500,
-                "currency": "INR",
-                "category": "Food & Dining",
-                "description": "Expense on eating out"
-            }
+        //     Example input: "500 ka kharcha kiya khane pe"
+        //     Example response:
+        //     {
+        //         "amount": 500,
+        //         "currency": "INR",
+        //         "category": "Food & Dining",
+        //         "description": "Expense on eating out"
+        //     }
 
-            Now process this message:
-            "${message}"
-        `,
+        //     Now process this message:
+        //     "${message}"
+        // `,
+
+        prompt: `You are an intelligent assistant that extracts expense-related details from user messages. The user might use Hinglish (a mix of Hindi and English) or Banglish (a mix of Bengali and English). Your task is to analyze the input and determine whether it describes an expense.
+
+                Steps to Process the Input:
+                Determine if the message is related to an expense.
+
+                If the message does not describe an expense, respond with:
+
+                json
+                Copy
+                Edit
+                {
+                    "valid": false,
+                    "reason": "The message does not describe an expense."
+                }
+                If the message is expense-related, extract the following details:
+
+                Amount: Identify the numeric value (e.g., "200", "₹500", "150 dollars").
+
+                Currency: If a currency is explicitly mentioned (e.g., "USD", "INR"), use it; otherwise, default to "INR".
+
+                Category: Classify the expense into one of the following predefined categories:
+
+                Housing,
+                Utilities,
+                Food & Beverages,
+                Transportation,
+                Shopping,
+                Health,
+                Entertainment,
+                Education,
+                Travel,
+                Miscellaneous
+
+                Description: Generate a short phrase summarizing the expense.
+
+                If multiple categories fit, choose the most specific one.
+
+                Handle linguistic variations and common spending-related phrases.
+
+                Recognize Hinglish/Banglish phrases such as:
+
+                "500 kharcha kiya khana pe" → "Food & Beverages"
+
+                "200 diye cinema jete." → "Entertainment"
+
+                Identify different ways to mention currency: ₹, rs, rupaiya, টাকা.
+
+                Understand common spending-related terms such as eating out, shopping, commuting, and paying bills.
+
+                Expected JSON Response Format
+                Case 1: Expense-related message
+                Input: "500 ka kharcha kiya khane pe"
+                Output:
+
+                json
+                Copy
+                Edit
+                {
+                    "valid": true,
+                    "amount": 500,
+                    "currency": "INR",
+                    "category": "Food & Beverages",
+                    "description": "Expense on eating out"
+                }
+                Case 2: Non-expense message
+                Input: "How's the weather today?"
+                Output:
+
+                json
+                Copy
+                Edit
+                {
+                    "valid": false,
+                    "reason": "The message does not describe an expense."
+                }
+                Task
+                Analyze the following message and return the appropriate structured JSON response:
+                "${message}"`,
     };
 };
 
 /// Call the Gemini API to interpret the user message and generate a response
 /// based on the defined prompt and generation configuration.
 export const callGeminiAPI = asyncHandler(async (message) => {
-    console.log("Message: ", message);
+    // console.log("Message: ", message);
     const { prompt } = buildGeminiPrompt(message);
-    console.log("Prompt: ", prompt);
+    // console.log("Prompt: ", prompt);
     const result = await model.generateContent(prompt, generationConfig);
 
-    console.dir(result, { depth: null });
+    // console.dir(result, { depth: null });
     return result.response.text();
 });
 
