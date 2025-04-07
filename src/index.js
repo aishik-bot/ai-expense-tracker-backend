@@ -6,6 +6,7 @@ import errorHandler from "./middleware/errorHandler.mjs";
 import AppError from "./utils/appError.mjs";
 import userRoutes from "./routes/userRoutes.mjs";
 import adminUserRoutes from "./routes/admin/userRoutes.mjs";
+import adminCategoryRoutes from "./routes/admin/categoryRoutes.mjs";
 import { setupSocket } from "./socket/socketConfig.mjs";
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(express.json());
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/admin/users", adminUserRoutes);
+app.use("/api/v1/admin/categories", adminCategoryRoutes);
 
 // Home route
 app.get("/", (req, res) => {
