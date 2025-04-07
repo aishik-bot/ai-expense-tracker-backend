@@ -6,6 +6,7 @@ import errorHandler from "./middleware/errorHandler.mjs";
 import AppError from "./utils/appError.mjs";
 import userRoutes from "./routes/userRoutes.mjs";
 import categoryRoutes from "./routes/categoryRoutes.mjs";
+import expenseRoutes from "./routes/expenseRoutes.mjs";
 import adminUserRoutes from "./routes/admin/userRoutes.mjs";
 import adminCategoryRoutes from "./routes/admin/categoryRoutes.mjs";
 import { setupSocket } from "./socket/socketConfig.mjs";
@@ -25,6 +26,7 @@ app.use(express.json());
 // Normal routes
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/expenses", expenseRoutes);
 
 // Admin routes
 app.use("/api/v1/admin/users", adminUserRoutes);
