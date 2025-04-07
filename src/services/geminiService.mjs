@@ -135,6 +135,7 @@ const buildGeminiPrompt = (message) => {
                 Entertainment,
                 Education,
                 Travel,
+                Insurance,
                 Miscellaneous
 
                 Description: Generate a short phrase summarizing the expense.
