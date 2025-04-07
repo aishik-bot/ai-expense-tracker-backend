@@ -1,5 +1,5 @@
 import asyncHandler from "../middleware/asyncHandler.mjs";
-import { deleteExpenseById, getExpenses } from "../services/expenseService.mjs";
+import { deleteExpenseById, editExpenseById, getExpenses } from "../services/expenseService.mjs";
 import AppError from "../utils/appError.mjs";
 import sendResponse from "../utils/sendResponse.mjs";
 
@@ -87,8 +87,6 @@ export const getExpensesByUserId = asyncHandler(async (req, res) => {
     });
 });
 
-
-
 /**
  * Controller function to delete an expense by its ID.
  * @param {Object} req - Express request object.
@@ -107,3 +105,26 @@ export const deleteExpense = asyncHandler(async (req, res) => {
         message: "Expense deleted successfully",
     });
 });
+
+
+/**
+ * Controller function to edit an expense by its ID.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
+export const editExpense = asyncHandler(async (req, res) => {
+    const { expenseId } = req.params;
+    const data = req.body;
+
+    // Call the service function to edit the expense
+    const updatedExpense = await editExpenseById(expenseId, data);
+
+    // Send a success message back to the client
+    sendResponse({
+        res,
+        statusCode: 200,
+        message: "Expense updated successfully",
+        data: updatedExpense,
+    });
+});
+

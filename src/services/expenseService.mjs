@@ -116,3 +116,49 @@ export const deleteExpenseById = asyncHandler(async (expenseId) => {
         },
     });
 });
+
+
+
+/**
+ * Edits an expense by its ID in the database.
+ * @param {string} expenseId The ID of the expense to edit
+ * @param {Object} data The data to update the expense with
+ * @returns {Promise<import("prisma").Expense>} The updated expense
+ * @throws {AppError} If the expense is not found
+ * @throws {AppError} If the category is not found
+ */
+export const editExpenseById = asyncHandler(async (expenseId, data) => {
+    // Find the expense to edit
+    const existingExpense = await prisma.expense.findUnique({
+        where: { id: expenseId },
+        select: {
+            id: true,
+        },
+    });
+
+    // If the expense is not found, throw a 404 error
+    if (!existingExpense) {
+        throw new AppError("Expense not found", 404);
+    }
+
+    // Validate the category ID if provided
+    if (data.categoryId) {
+        const category = await prisma.category.findUnique({
+            where: { id: data.categoryId },
+            select: {
+                id: true,
+            },
+        });
+
+        // If the category is not found, throw a 404 error
+        if (!category) {
+            throw new AppError("Category not found", 404);
+        }
+    }
+
+    // Update the expense
+    return await prisma.expense.update({
+        where: { id: expenseId },
+        data,
+    });
+});
