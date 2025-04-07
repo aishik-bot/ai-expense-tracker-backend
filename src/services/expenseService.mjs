@@ -1,5 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.mjs";
 import prisma from "../prisma/client.mjs";
+import AppError from "../utils/appError.mjs";
 
 // Service to get expenses by user ID with optional filtering by category
 export const getExpenses = asyncHandler(
@@ -35,7 +36,7 @@ export const getExpenses = asyncHandler(
             // Calculate the next day
             const nextDay = new Date(inputDate);
             nextDay.setDate(inputDate.getDate() + 1);
-        
+
             // Set the createdAt date range to filter expenses
             dateFilter.createdAt = {
                 gte: inputDate,
@@ -91,3 +92,27 @@ export const getExpenses = asyncHandler(
         };
     }
 );
+
+/**
+ * Deletes an expense by its ID from the database.
+ * @param {string} expenseId The ID of the expense to delete
+ * @throws {AppError} If the expense is not found
+ */
+export const deleteExpenseById = asyncHandler(async (expenseId) => {
+    // Find the expense to delete
+    const existingExpense = await prisma.expense.findUnique({
+        where: { id: expenseId },
+    });
+
+    if (!existingExpense) {
+        // If the expense is not found, throw a 404 error
+        throw new AppError("Expense not found", 404);
+    }
+
+    // Delete the expense
+    return await prisma.expense.delete({
+        where: {
+            id: expenseId,
+        },
+    });
+});
