@@ -59,3 +59,20 @@ export const createMultipleCategories = asyncHandler(async (categories) => {
     return createdCategories;
 });
 
+/**
+ * Fetch all categories from the database.
+ * @returns {Promise<import("prisma").Category[]>} Promise that resolves to an array of category objects
+ */
+export const getAllCategories = asyncHandler(async () => {
+    // Fetch all categories from the database
+    const categories = await prisma.category.findMany({
+        // Select only the id and name fields
+        select: {
+            id: true,
+            name: true,
+        },
+    });
+
+    // Return the categories
+    return categories;
+});

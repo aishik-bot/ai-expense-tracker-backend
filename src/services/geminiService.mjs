@@ -127,7 +127,7 @@ const buildGeminiPrompt = (message) => {
                 Category: Classify the expense into one of the following predefined categories:
 
                 Housing,
-                Utilities,
+                Utilities & Bills,
                 Food & Beverages,
                 Transportation,
                 Shopping,
