@@ -52,13 +52,15 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
     next();
 });
 
-
 export const verifySocketToken = asyncHandler(async (socket, next) => {
-    const token = socket.handshake.headers.authorization;          // Get token from socket handshake
+    const token =
+        socket.handshake.headers?.authorization || socket.handshake.auth?.token; // Get token from socket handshake
 
     // If no token is provided, throw an error
     if (!token) {
-        return next(new AppError("Unauthorized access, No token provided", 401));
+        return next(
+            new AppError("Unauthorized access, No token provided", 401)
+        );
     }
 
     const decodedToken = await auth.verifyIdToken(token);
@@ -81,4 +83,4 @@ export const verifySocketToken = asyncHandler(async (socket, next) => {
     socket.user = { ...decodedToken, role: user.role.name, id: user.id };
 
     next();
-})
+});
